@@ -1,0 +1,282 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		ACD148A61FF17DE00008EA7B /* VoodooI2CSynaptics.hpp in Headers */ = {isa = PBXBuildFile; fileRef = ACD148A51FF17DE00008EA7B /* VoodooI2CSynaptics.hpp */; };
+		ACD148A81FF17DE00008EA7B /* VoodooI2CSynaptics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD148A71FF17DE00008EA7B /* VoodooI2CSynaptics.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		ACD148A21FF17DE00008EA7B /* VoodooI2CSynaptics.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoodooI2CSynaptics.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		ACD148A51FF17DE00008EA7B /* VoodooI2CSynaptics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VoodooI2CSynaptics.hpp; sourceTree = "<group>"; };
+		ACD148A71FF17DE00008EA7B /* VoodooI2CSynaptics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CSynaptics.cpp; sourceTree = "<group>"; };
+		ACD148A91FF17DE00008EA7B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		ACD1489E1FF17DE00008EA7B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		ACD148981FF17DE00008EA7B = {
+			isa = PBXGroup;
+			children = (
+				ACD148A41FF17DE00008EA7B /* VoodooI2CSynaptics */,
+				ACD148A31FF17DE00008EA7B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ACD148A31FF17DE00008EA7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ACD148A21FF17DE00008EA7B /* VoodooI2CSynaptics.kext */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ACD148A41FF17DE00008EA7B /* VoodooI2CSynaptics */ = {
+			isa = PBXGroup;
+			children = (
+				ACD148A51FF17DE00008EA7B /* VoodooI2CSynaptics.hpp */,
+				ACD148A71FF17DE00008EA7B /* VoodooI2CSynaptics.cpp */,
+				ACD148A91FF17DE00008EA7B /* Info.plist */,
+			);
+			path = VoodooI2CSynaptics;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		ACD1489F1FF17DE00008EA7B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACD148A61FF17DE00008EA7B /* VoodooI2CSynaptics.hpp in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		ACD148A11FF17DE00008EA7B /* VoodooI2CSynaptics */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ACD148AC1FF17DE00008EA7B /* Build configuration list for PBXNativeTarget "VoodooI2CSynaptics" */;
+			buildPhases = (
+				ACD1489D1FF17DE00008EA7B /* Sources */,
+				ACD1489E1FF17DE00008EA7B /* Frameworks */,
+				ACD1489F1FF17DE00008EA7B /* Headers */,
+				ACD148A01FF17DE00008EA7B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VoodooI2CSynaptics;
+			productName = VoodooI2CSynaptics;
+			productReference = ACD148A21FF17DE00008EA7B /* VoodooI2CSynaptics.kext */;
+			productType = "com.apple.product-type.kernel-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ACD148991FF17DE00008EA7B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = "Alexandre Daoud";
+				TargetAttributes = {
+					ACD148A11FF17DE00008EA7B = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = ACD1489C1FF17DE00008EA7B /* Build configuration list for PBXProject "VoodooI2CSynaptics" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = ACD148981FF17DE00008EA7B;
+			productRefGroup = ACD148A31FF17DE00008EA7B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ACD148A11FF17DE00008EA7B /* VoodooI2CSynaptics */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		ACD148A01FF17DE00008EA7B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		ACD1489D1FF17DE00008EA7B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACD148A81FF17DE00008EA7B /* VoodooI2CSynaptics.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		ACD148AA1FF17DE00008EA7B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		ACD148AB1FF17DE00008EA7B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		ACD148AD1FF17DE00008EA7B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0d1;
+				INFOPLIST_FILE = VoodooI2CSynaptics/Info.plist;
+				MODULE_NAME = com.alexandred.VoodooI2CSynaptics;
+				MODULE_VERSION = 1.0.0d1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2CSynaptics;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = kext;
+			};
+			name = Debug;
+		};
+		ACD148AE1FF17DE00008EA7B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0d1;
+				INFOPLIST_FILE = VoodooI2CSynaptics/Info.plist;
+				MODULE_NAME = com.alexandred.VoodooI2CSynaptics;
+				MODULE_VERSION = 1.0.0d1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2CSynaptics;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = kext;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		ACD1489C1FF17DE00008EA7B /* Build configuration list for PBXProject "VoodooI2CSynaptics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ACD148AA1FF17DE00008EA7B /* Debug */,
+				ACD148AB1FF17DE00008EA7B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ACD148AC1FF17DE00008EA7B /* Build configuration list for PBXNativeTarget "VoodooI2CSynaptics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ACD148AD1FF17DE00008EA7B /* Debug */,
+				ACD148AE1FF17DE00008EA7B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ACD148991FF17DE00008EA7B /* Project object */;
+}
