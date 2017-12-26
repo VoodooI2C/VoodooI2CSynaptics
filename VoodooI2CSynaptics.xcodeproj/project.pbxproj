@@ -7,15 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		ACD148A61FF17DE00008EA7B /* VoodooI2CSynaptics.hpp in Headers */ = {isa = PBXBuildFile; fileRef = ACD148A51FF17DE00008EA7B /* VoodooI2CSynaptics.hpp */; };
-		ACD148A81FF17DE00008EA7B /* VoodooI2CSynaptics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD148A71FF17DE00008EA7B /* VoodooI2CSynaptics.cpp */; };
+		ACD148B71FF1800A0008EA7B /* VoodooI2CSynapticsDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD148B51FF1800A0008EA7B /* VoodooI2CSynapticsDevice.cpp */; };
+		ACD148B81FF1800A0008EA7B /* VoodooI2CSynapticsDevice.hpp in Headers */ = {isa = PBXBuildFile; fileRef = ACD148B61FF1800A0008EA7B /* VoodooI2CSynapticsDevice.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		ACD148A21FF17DE00008EA7B /* VoodooI2CSynaptics.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoodooI2CSynaptics.kext; sourceTree = BUILT_PRODUCTS_DIR; };
-		ACD148A51FF17DE00008EA7B /* VoodooI2CSynaptics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VoodooI2CSynaptics.hpp; sourceTree = "<group>"; };
-		ACD148A71FF17DE00008EA7B /* VoodooI2CSynaptics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CSynaptics.cpp; sourceTree = "<group>"; };
 		ACD148A91FF17DE00008EA7B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ACD148B51FF1800A0008EA7B /* VoodooI2CSynapticsDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CSynapticsDevice.cpp; sourceTree = "<group>"; };
+		ACD148B61FF1800A0008EA7B /* VoodooI2CSynapticsDevice.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VoodooI2CSynapticsDevice.hpp; sourceTree = "<group>"; };
+		ACD148B91FF1807A0008EA7B /* VoodooI2CSynapticsConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoodooI2CSynapticsConstants.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,9 +49,10 @@
 		ACD148A41FF17DE00008EA7B /* VoodooI2CSynaptics */ = {
 			isa = PBXGroup;
 			children = (
-				ACD148A51FF17DE00008EA7B /* VoodooI2CSynaptics.hpp */,
-				ACD148A71FF17DE00008EA7B /* VoodooI2CSynaptics.cpp */,
 				ACD148A91FF17DE00008EA7B /* Info.plist */,
+				ACD148B51FF1800A0008EA7B /* VoodooI2CSynapticsDevice.cpp */,
+				ACD148B61FF1800A0008EA7B /* VoodooI2CSynapticsDevice.hpp */,
+				ACD148B91FF1807A0008EA7B /* VoodooI2CSynapticsConstants.h */,
 			);
 			path = VoodooI2CSynaptics;
 			sourceTree = "<group>";
@@ -62,7 +64,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACD148A61FF17DE00008EA7B /* VoodooI2CSynaptics.hpp in Headers */,
+				ACD148B81FF1800A0008EA7B /* VoodooI2CSynapticsDevice.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,7 +136,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACD148A81FF17DE00008EA7B /* VoodooI2CSynaptics.cpp in Sources */,
+				ACD148B71FF1800A0008EA7B /* VoodooI2CSynapticsDevice.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +238,7 @@
 				INFOPLIST_FILE = VoodooI2CSynaptics/Info.plist;
 				MODULE_NAME = com.alexandred.VoodooI2CSynaptics;
 				MODULE_VERSION = 1.0.0d1;
+				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2CSynaptics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = kext;
@@ -250,6 +253,7 @@
 				INFOPLIST_FILE = VoodooI2CSynaptics/Info.plist;
 				MODULE_NAME = com.alexandred.VoodooI2CSynaptics;
 				MODULE_VERSION = 1.0.0d1;
+				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2CSynaptics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = kext;
@@ -275,6 +279,7 @@
 				ACD148AE1FF17DE00008EA7B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
