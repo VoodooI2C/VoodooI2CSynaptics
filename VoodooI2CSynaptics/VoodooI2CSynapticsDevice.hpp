@@ -147,7 +147,7 @@ public:
     void rmi_f11_process_touch(OSArray* transducers, int transducer_id, AbsoluteTime timestamp, uint8_t finger_state, uint8_t *touch_data);
     int rmi_f11_input(OSArray* transducers, AbsoluteTime timestamp, uint8_t *rmiInput);
     int rmi_f30_input(OSArray* transducers, AbsoluteTime timestamp, uint8_t irq, uint8_t *rmiInput, int size);
-    void TrackpadRawInput(uint8_t report[40], int tickinc);
+    void TrackpadRawInput(uint8_t report[40]);
     
     bool publish_multitouch_interface();
     void unpublish_multitouch_interface();

@@ -20,36 +20,41 @@ void VoodooI2CSynapticsDevice::rmi_f11_process_touch(OSArray* transducers, int t
     
     VoodooI2CDigitiserTransducer* transducer;
     
-    if (finger_state == 0x01) {
-        x = (touch_data[0] << 4) | (touch_data[2] & 0x0F);
-        y = (touch_data[1] << 4) | (touch_data[2] >> 4);
-        wx = touch_data[3] & 0x0F;
-        wy = touch_data[3] >> 4;
-        wide = (wx > wy);
-        major = max(wx, wy);
-        minor = min(wx, wy);
-        z = touch_data[4];
-        
-        y = max_y - y;
-        
-        x *= mt_interface->logical_max_x;
-        x /= mt_interface->physical_max_x;
-        
-        y *= mt_interface->logical_max_y;
-        y /= mt_interface->logical_max_y;
-        
-        if ((f30.interrupt_base < f11.interrupt_base) && transducer_id == 0) {
-            transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, transducers->getObject(transducer_id));
-        } else {
-            transducer = VoodooI2CDigitiserTransducer::transducer(kDigitiserTransducerFinger, NULL);
+    x = (touch_data[0] << 4) | (touch_data[2] & 0x0F);
+    y = (touch_data[1] << 4) | (touch_data[2] >> 4);
+    wx = touch_data[3] & 0x0F;
+    wy = touch_data[3] >> 4;
+    wide = (wx > wy);
+    major = max(wx, wy);
+    minor = min(wx, wy);
+    z = touch_data[4];
+    
+    y = max_y - y;
+    
+    // x *= mt_interface->logical_max_x;
+    // x /= mt_interface->physical_max_x;
+    
+    // y *= mt_interface->logical_max_y;
+    // y /= mt_interface->logical_max_y;
+    
+    if ((f30.interrupt_base < f11.interrupt_base) && transducer_id == 0) {
+        transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, transducers->getObject(transducer_id));
+    } else {
+        transducer = VoodooI2CDigitiserTransducer::transducer(kDigitiserTransducerFinger, NULL);
 
-            transducers->setObject(transducer);
-        }
-        
-        transducer->coordinates.x.update(x, timestamp);
-        transducer->coordinates.y.update(y, timestamp);
-        transducer->coordinates.z.update(z, timestamp);
+        transducers->setObject(transducer);
     }
+
+    transducer->id = transducer_id;
+    transducer->secondary_id = transducer_id;
+    transducer->coordinates.x.update(x, timestamp);
+    transducer->coordinates.y.update(y, timestamp);
+    transducer->coordinates.z.update(z, timestamp);
+    transducer->tip_pressure.update(z, timestamp);
+    transducer->is_valid = finger_state & 0x1;
+    transducer->tip_switch.update(finger_state & 0x1, timestamp);
+
+    IOLog("Transducer id: %d, x: %d, y: %d, z: %d, valid: %d\n", transducer_id, x, y, z, transducer->is_valid);
 }
 
 int VoodooI2CSynapticsDevice::rmi_f11_input(OSArray* transducers, AbsoluteTime timestamp, uint8_t *rmiInput) {
@@ -103,7 +108,7 @@ int VoodooI2CSynapticsDevice::rmi_f30_input(OSArray* transducers, AbsoluteTime t
     return f30.report_size;
 }
 
-void VoodooI2CSynapticsDevice::TrackpadRawInput(uint8_t report[40], int tickinc){
+void VoodooI2CSynapticsDevice::TrackpadRawInput(uint8_t report[40]){
     if (report[0] != RMI_ATTN_REPORT_ID)
         return;
 
@@ -164,6 +169,8 @@ VoodooI2CSynapticsDevice* VoodooI2CSynapticsDevice::probe(IOService* provider, S
 }
 
 void VoodooI2CSynapticsDevice::releaseResources() {
+    unpublish_multitouch_interface();
+
     if (interrupt_source) {
         interrupt_source->disable();
         work_loop->removeEventSource(interrupt_source);
@@ -192,6 +199,8 @@ void VoodooI2CSynapticsDevice::releaseResources() {
 bool VoodooI2CSynapticsDevice::start(IOService* api) {
     if (!super::start(api))
         return false;
+    
+    reading = true;
 
     work_loop = getWorkLoop();
     
@@ -224,6 +233,10 @@ bool VoodooI2CSynapticsDevice::start(IOService* api) {
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
 
     setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+    
+    publish_multitouch_interface();
+    
+    reading = false;
 
     return true;
 exit:
@@ -248,6 +261,7 @@ bool VoodooI2CSynapticsDevice::init(OSDictionary* properties) {
 
 int VoodooI2CSynapticsDevice::rmi_read_block(uint16_t addr, uint8_t *buf, const int len) {
     int ret = 0;
+    IOReturn ret2;
     
     if (RMI_PAGE(addr) != page) {
         ret = rmi_set_page(RMI_PAGE(addr));
@@ -265,15 +279,23 @@ int VoodooI2CSynapticsDevice::rmi_read_block(uint16_t addr, uint8_t *buf, const 
     writeReport[3] = (addr >> 8) & 0xFF;
     writeReport[4] = len & 0xFF;
     writeReport[5] = (len >> 8) & 0xFF;
-    rmi_write_report(writeReport, sizeof(writeReport));
+     if (rmi_write_report(writeReport, sizeof(writeReport)) < 0)
+         return -1;
     
     uint8_t i2cInput[42];
-    api->readI2C(i2cInput, sizeof(UInt8));
+    ret2 = api->readI2C(i2cInput, sizeof(i2cInput));
     
+    if (ret2 != kIOReturnSuccess)
+        return -1;
+
+    // IOLog("RMI Read Commence\n");
     uint8_t rmiInput[40];
     for (int i = 0; i < 40; i++) {
+        // IOLog("0x%x ", i2cInput[i]);
         rmiInput[i] = i2cInput[i + 2];
     }
+    // IOLog("\n");
+    // IOLog("RMI Read End\n");
     if (rmiInput[0] == RMI_READ_DATA_REPORT_ID) {
         for (int i = 0; i < len; i++) {
             buf[i] = rmiInput[i + 2];
@@ -292,12 +314,21 @@ int VoodooI2CSynapticsDevice::rmi_write_report(uint8_t *report, size_t report_si
     for (int i = 0; i < report_size; i++) {
         command[i + 4] = report[i];
     }
-    api->writeI2C(command, sizeof(command));
-    return 0;
+    IOReturn ret = api->writeI2C(command, sizeof(command));
+    
+    if (ret != kIOReturnSuccess)
+        return -1;
+    else
+        return 0;
 }
 
 int VoodooI2CSynapticsDevice::rmi_read(uint16_t addr, uint8_t *buf){
-    return rmi_read_block(addr, buf, 1);
+    IOReturn ret = rmi_read_block(addr, buf, 1);
+
+    if (ret != kIOReturnSuccess)
+        return -1;
+    else
+        return 0;
 }
 
 int VoodooI2CSynapticsDevice::rmi_write_block(uint16_t addr, uint8_t *buf, const int len)
@@ -366,7 +397,7 @@ void VoodooI2CSynapticsDevice::rmi_register_function(struct pdt_entry *pdt_entry
     struct rmi_function *f = NULL;
     uint16_t page_base = page << 8;
     
-    IOLog("got RMI function: 0x%x\n", pdt_entry->function_number);
+    // IOLog("got RMI function: 0x%x\n", pdt_entry->function_number);
     
     switch (pdt_entry->function_number) {
         case 0x01:
@@ -433,7 +464,7 @@ int VoodooI2CSynapticsDevice::rmi_scan_pdt()
         }
         
         if (!page_has_function)
-            continue;
+            break;
     }
     
     IOLog("%s::%s::Done with PDT scan.\n", getName(), name);
@@ -457,6 +488,11 @@ int VoodooI2CSynapticsDevice::rmi_populate_f01()
     uint16_t query_offset = f01.query_base_addr;
     uint16_t prod_info_addr;
     uint8_t ds4_query_len;
+    
+    if (!f01.query_base_addr) {
+        IOLog("%s::%s::Could not find F01\n", getName(), name);
+        return -1;
+    }
     
     ret = rmi_read_block(query_offset, basic_queries,
                          RMI_DEVICE_F01_BASIC_QUERY_LEN);
@@ -844,13 +880,16 @@ int VoodooI2CSynapticsDevice::rmi_populate_f30()
 int VoodooI2CSynapticsDevice::rmi_set_mode(uint8_t mode) {
     uint8_t command[] = { 0x22, 0x00, 0x3f, 0x03, 0x0f, 0x23, 0x00, 0x04, 0x00, RMI_SET_RMI_MODE_REPORT_ID, mode }; //magic bytes from Linux
     IOReturn ret = api->writeI2C(command, sizeof(command));
-    return 0;
+    if (ret != kIOReturnSuccess)
+        return -1;
+    else
+        return 0;
 }
 
 int VoodooI2CSynapticsDevice::rmi_populate() {
     int ret;
     
-    ret = rmi_set_mode(RMI_MODE_ATTN_REPORTS);
+    rmi_set_mode(RMI_MODE_ATTN_REPORTS);
     if (ret) {
         IOLog("%s::%s::PDT set mode failed with code %d\n", getName(), name, ret);
         return ret;
@@ -910,11 +949,17 @@ IOReturn VoodooI2CSynapticsDevice::setPowerState(unsigned long powerState, IOSer
 
 
 void VoodooI2CSynapticsDevice::interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
-    IOLog("interrupt\n");
     if (reading)
         return;
 
-    get_input();
+    thread_t new_thread;
+    kern_return_t ret = kernel_thread_start(OSMemberFunctionCast(thread_continue_t, this, &VoodooI2CSynapticsDevice::get_input), this, &new_thread);
+    if (ret != KERN_SUCCESS) {
+        reading = false;
+        IOLog("%s Thread error while attemping to get input report\n", getName());
+    } else {
+        thread_deallocate(new_thread);
+    }
 }
 
 void VoodooI2CSynapticsDevice::get_input() {
@@ -932,16 +977,15 @@ void VoodooI2CSynapticsDevice::get_input() {
     }
     
     if (rmiInput[0] == 0x00){
-        return;
+        goto exit;
     }
     
     if (rmiInput[0] != RMI_ATTN_REPORT_ID) {
-        return;
+        goto exit;
     }
     
-    IOLog("Got Input!\n");
-    
-    TrackpadRawInput(rmiInput, 1);
+    TrackpadRawInput(rmiInput);
+exit:
     reading = false;
 }
 
