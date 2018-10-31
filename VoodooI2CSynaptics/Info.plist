@@ -26,11 +26,14 @@
 			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 			<key>IOClass</key>
 			<string>VoodooI2CSynapticsDevice</string>
-			<key>IOPropertyMatch</key>
-			<dict>
-				<key>name</key>
+			<key>IONameMatch</key>
+			<array>
 				<string>DLL06E4</string>
-			</dict>
+                <string>SYNA2B33</string>
+                <string>SYNA2B42</string>
+            </array>
+            <key>IOMatchCategory</key>
+            <string>IODefaultMatchCategory</string>
 			<key>IOProbeScore</key>
 			<integer>200</integer>
 			<key>IOProviderClass</key>

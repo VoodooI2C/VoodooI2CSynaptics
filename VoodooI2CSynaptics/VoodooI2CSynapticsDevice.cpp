@@ -31,11 +31,11 @@ void VoodooI2CSynapticsDevice::rmi_f11_process_touch(OSArray* transducers, int t
     
     y = max_y - y;
     
-    // x *= mt_interface->logical_max_x;
-    // x /= mt_interface->physical_max_x;
+    x *= mt_interface->logical_max_x;
+    x /= mt_interface->physical_max_x;
     
-    // y *= mt_interface->logical_max_y;
-    // y /= mt_interface->logical_max_y;
+    y *= mt_interface->logical_max_y;
+    y /= mt_interface->physical_max_y;
     
     if ((f30.interrupt_base < f11.interrupt_base) && transducer_id == 0) {
         transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, transducers->getObject(transducer_id));
@@ -54,7 +54,7 @@ void VoodooI2CSynapticsDevice::rmi_f11_process_touch(OSArray* transducers, int t
     transducer->is_valid = finger_state & 0x1;
     transducer->tip_switch.update(finger_state & 0x1, timestamp);
 
-    IOLog("Transducer id: %d, x: %d, y: %d, z: %d, valid: %d\n", transducer_id, x, y, z, transducer->is_valid);
+    // IOLog("Transducer id: %d, x: %d, y: %d, z: %d, valid: %d\n", transducer_id, x, y, z, transducer->is_valid);
 }
 
 int VoodooI2CSynapticsDevice::rmi_f11_input(OSArray* transducers, AbsoluteTime timestamp, uint8_t *rmiInput) {
@@ -100,9 +100,12 @@ int VoodooI2CSynapticsDevice::rmi_f30_input(OSArray* transducers, AbsoluteTime t
     for (i = 0; i < gpio_led_count; i++) {
         if (button_mask & BIT(i)) {
             value = (rmiInput[i / 8] >> (i & 0x07)) & BIT(0);
-            if (button_state_mask & BIT(i))
-                value = !value;
-            transducer->physical_button.update(value, timestamp);
+            if (value == 0 && transducer->physical_button.value()==0){
+                value = 1;
+                transducer->physical_button.update(value, timestamp);
+            }
+            break;
+            
         }
     }
     return f30.report_size;
@@ -889,7 +892,7 @@ int VoodooI2CSynapticsDevice::rmi_set_mode(uint8_t mode) {
 int VoodooI2CSynapticsDevice::rmi_populate() {
     int ret;
     
-    rmi_set_mode(RMI_MODE_ATTN_REPORTS);
+    ret = rmi_set_mode(RMI_MODE_ATTN_REPORTS);
     if (ret) {
         IOLog("%s::%s::PDT set mode failed with code %d\n", getName(), name, ret);
         return ret;
@@ -915,7 +918,13 @@ int VoodooI2CSynapticsDevice::rmi_populate() {
     
     ret = rmi_populate_f12();
     if (ret) {
-        IOLog("%s::%s::Error while initialising F12 (%d)\n", getName(), name, ret);
+        IOLog("%s::%s::Possible error while initialising F12 (%d)\n", getName(), name, ret);
+        return ret;
+    }
+    
+    if (!f11.query_base_addr && !f12.query_base_addr) {
+        IOLog("%s::%s::Could not find either F11 or F12, not able to drive this device\n", getName(), name);
+        return -1;
     }
     
     ret = rmi_populate_f30();
