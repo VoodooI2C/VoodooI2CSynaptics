@@ -35,17 +35,17 @@ enum rmi_mode_type {
 };
 
 struct rmi_function {
-    unsigned page;			/* page of the function */
-    uint16_t query_base_addr;		/* base address for queries */
-    uint16_t command_base_addr;		/* base address for commands */
-    uint16_t control_base_addr;		/* base address for controls */
-    uint16_t data_base_addr;		/* base address for datas */
-    unsigned int interrupt_base;	/* cross-function interrupt number
+    unsigned page;            /* page of the function */
+    uint16_t query_base_addr;        /* base address for queries */
+    uint16_t command_base_addr;        /* base address for commands */
+    uint16_t control_base_addr;        /* base address for controls */
+    uint16_t data_base_addr;        /* base address for datas */
+    unsigned int interrupt_base;    /* cross-function interrupt number
                                      * (uniq in the device)*/
-    unsigned int interrupt_count;	/* number of interrupts */
-    unsigned int report_size;	/* size of a report */
-    unsigned long irq_mask;		/* mask of the interrupts
-                                 * (to be applied against ATTN IRQ) */
+    unsigned int interrupt_count;    /* number of interrupts */
+    unsigned int report_size;    /* size of a report */
+    unsigned long irq_mask;        /* mask of the interrupts
+                                    * (to be applied against ATTN IRQ) */
 };
 
 
@@ -72,6 +72,8 @@ private:
     IOCommandGate* command_gate;
     UInt16 hid_descriptor_register;
     IOInterruptEventSource* interrupt_source;
+    
+    OSArray* transducers;
     
     uint16_t max_x;
     uint16_t max_y;
@@ -110,14 +112,14 @@ protected:
     const char* name;
     IOWorkLoop* work_loop;
     bool reading;
-
+    
 public:
     void stop(IOService* device) override;
     
     bool start(IOService* api);
     
     bool init(OSDictionary* properties);
-
+    
     VoodooI2CSynapticsDevice* probe(IOService* provider, SInt32* score);
     
     void interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
