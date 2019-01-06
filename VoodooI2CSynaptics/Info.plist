@@ -18,29 +18,25 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>IOKitPersonalities</key>
-	<dict>
-		<key>VoodooI2CHIDDevice</key>
-		<dict>
-			<key>CFBundleIdentifier</key>
-			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-			<key>IOClass</key>
-			<string>VoodooI2CSynapticsDevice</string>
-			<key>IOPropertyMatch</key>
-			<dict>
-				<key>compatible</key>
-				<string>PNP0C50</string>
-			</dict>
-			<key>IOProbeScore</key>
-			<integer>200</integer>
-			<key>IOProviderClass</key>
-			<string>VoodooI2CDeviceNub</string>
-			<key>RM,deliverNotifications</key>
-			<true/>
-			<key>QuietTimeAfterTyping</key>
-			<integer>500</integer>
-		</dict>
-	</dict>
+    <key>IOKitPersonalities</key>
+    <dict>
+        <key>VoodooI2CHIDDevice</key>
+        <dict>
+            <key>CFBundleIdentifier</key>
+            <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+            <key>IOClass</key>
+            <string>VoodooI2CSynapticsDevice</string>
+            <key>IOProbeScore</key>
+            <integer>400</integer>
+            <key>IOPropertyMatch</key>
+            <dict>
+                <key>name</key>
+                <string>SYNA2B33</string>
+            </dict>
+            <key>IOProviderClass</key>
+            <string>VoodooI2CDeviceNub</string>
+        </dict>
+    </dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2017 Alexandre Daoud. All rights reserved.</string>
 	<key>CFBundleSpokenName</key>
