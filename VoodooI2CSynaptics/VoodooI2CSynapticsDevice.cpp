@@ -977,7 +977,7 @@ IOReturn VoodooI2CSynapticsDevice::setPowerState(unsigned long powerState, IOSer
 
 
 void VoodooI2CSynapticsDevice::interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
-    if (reading)
+    if (reading || !awake)
         return;
     
     thread_t new_thread;
