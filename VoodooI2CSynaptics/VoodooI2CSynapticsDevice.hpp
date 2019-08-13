@@ -9,6 +9,7 @@
 
 #ifndef VoodooI2CSynapticsDevice_hpp
 #define VoodooI2CSynapticsDevice_hpp
+#define INTERRUPT_SIMULATOR_TIMEOUT 5
 
 #include <IOKit/IOLib.h>
 #include <IOKit/IOKitKeys.h>
