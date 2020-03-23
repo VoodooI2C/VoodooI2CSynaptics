@@ -169,6 +169,13 @@ void VoodooI2CSynapticsDevice::releaseResources() {
         interrupt_source->release();
         interrupt_source = NULL;
     }
+        
+    if (interrupt_simulator) {
+        interrupt_simulator->disable();
+        work_loop->removeEventSource(interrupt_simulator);
+        interrupt_simulator->release();
+        interrupt_simulator = NULL;
+    }
     
     if (work_loop) {
         work_loop->release();
@@ -221,14 +228,23 @@ bool VoodooI2CSynapticsDevice::start(IOService* api) {
         goto exit;
     }
     
+    /* Sasha - Attempt implementation of polling */
     interrupt_source = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CSynapticsDevice::interruptOccured), api, 0);
     if (!interrupt_source) {
-        IOLog("%s::%s Could not get interrupt event source\n", getName(), name);
-        goto exit;
+        IOLog("%s::%s Could not get interrupt event source\n, trying to fallback on polling.", getName(), name);
+        interrupt_simulator = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CSynapticsDevice::simulateInterrupt));
+        if (!interrupt_simulator) {
+            IOLog("%s::%s Could not get timer event source\n", getName(), name);
+            goto exit;
+        }
+        work_loop->addEventSource(interrupt_simulator);
+        interrupt_simulator->setTimeoutMS(200);
+        IOLog("%s::%s Polling mode initialisation succeeded.", getName(), name);
+    } else {
+        work_loop->addEventSource(interrupt_source);
+        interrupt_source->enable();
     }
-    
-    work_loop->addEventSource(interrupt_source);
-    interrupt_source->enable();
+    /* End Sasha */
     
     PMinit();
     api->joinPMtree(this);
@@ -1061,4 +1077,10 @@ void VoodooI2CSynapticsDevice::unpublish_multitouch_interface() {
         mt_interface->release();
         mt_interface = NULL;
     }
+}
+
+/* Sasha - impl polling */
+void VoodooI2CSynapticsDevice::simulateInterrupt(OSObject* owner, IOTimerEventSource *timer) {
+    interruptOccured(owner, NULL, NULL);
+    interrupt_simulator->setTimeoutMS(INTERRUPT_SIMULATOR_TIMEOUT);
 }

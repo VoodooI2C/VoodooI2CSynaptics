@@ -9,6 +9,7 @@
 
 #ifndef VoodooI2CSynapticsDevice_hpp
 #define VoodooI2CSynapticsDevice_hpp
+#define INTERRUPT_SIMULATOR_TIMEOUT 5
 
 #include <IOKit/IOLib.h>
 #include <IOKit/IOKitKeys.h>
@@ -72,6 +73,7 @@ private:
     IOCommandGate* command_gate;
     UInt16 hid_descriptor_register;
     IOInterruptEventSource* interrupt_source;
+    IOTimerEventSource* interrupt_simulator; /* Sasha - Implement polling mode */
     
     OSArray* transducers;
     
@@ -155,6 +157,8 @@ public:
     void unpublish_multitouch_interface();
     
     void releaseResources();
+    
+    void simulateInterrupt(OSObject* owner, IOTimerEventSource* timer); /* Sasha - Implement polling mode */
 };
 
 
