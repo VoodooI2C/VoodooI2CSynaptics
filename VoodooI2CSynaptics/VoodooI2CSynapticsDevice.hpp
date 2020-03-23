@@ -49,7 +49,7 @@ struct rmi_function {
 };
 
 
-typedef struct __attribute__((__packed__)) pdt_entry {
+struct __attribute__((__packed__)) pdt_entry {
     uint8_t query_base_addr : 8;
     uint8_t command_base_addr : 8;
     uint8_t control_base_addr : 8;
