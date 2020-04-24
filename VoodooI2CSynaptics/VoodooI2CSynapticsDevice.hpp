@@ -118,11 +118,11 @@ protected:
 public:
     void stop(IOService* device) override;
     
-    bool start(IOService* api);
+    bool start(IOService* api) override;
     
-    bool init(OSDictionary* properties);
+    bool init(OSDictionary* properties) override;
     
-    VoodooI2CSynapticsDevice* probe(IOService* provider, SInt32* score);
+    VoodooI2CSynapticsDevice* probe(IOService* provider, SInt32* score) override;
     
     void interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     
