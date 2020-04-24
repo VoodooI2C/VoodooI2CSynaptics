@@ -14,8 +14,9 @@ OSDefineMetaClassAndStructors(VoodooI2CSynapticsDevice, IOService);
 
 void VoodooI2CSynapticsDevice::rmi_f11_process_touch(OSArray* transducers, int transducer_id, AbsoluteTime timestamp, uint8_t finger_state, uint8_t *touch_data)
 {
-    int x, y, wx, wy;
-    int wide, major, minor;
+    int x, y;
+    // int wx, wy;
+    // int wide, major, minor;
     int z;
     
     VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, transducers->getObject(transducer_id));
@@ -26,11 +27,11 @@ void VoodooI2CSynapticsDevice::rmi_f11_process_touch(OSArray* transducers, int t
     
     x = (touch_data[0] << 4) | (touch_data[2] & 0x0F);
     y = (touch_data[1] << 4) | (touch_data[2] >> 4);
-    wx = touch_data[3] & 0x0F;
-    wy = touch_data[3] >> 4;
-    wide = (wx > wy);
-    major = max(wx, wy);
-    minor = min(wx, wy);
+    // wx = touch_data[3] & 0x0F;
+    // wy = touch_data[3] >> 4;
+    // wide = (wx > wy);
+    // major = max(wx, wy);
+    // minor = min(wx, wy);
     z = touch_data[4];
     
     y = max_y - y;
@@ -116,11 +117,14 @@ void VoodooI2CSynapticsDevice::TrackpadRawInput(uint8_t report[40]){
     
     if (f11.interrupt_base < f30.interrupt_base) {
         index += rmi_f11_input(transducers, timestamp, &report[index]);
+        // index += rmi_f30_input(transducers, timestamp, report[1], &report[index], reportSize - index);
+        // Do not update index as it's not being read
+        rmi_f30_input(transducers, timestamp, report[1], &report[index], reportSize - index);
+    } else {
         index += rmi_f30_input(transducers, timestamp, report[1], &report[index], reportSize - index);
-    }
-    else {
-        index += rmi_f30_input(transducers, timestamp, report[1], &report[index], reportSize - index);
-        index += rmi_f11_input(transducers, timestamp, &report[index]);
+        // index += rmi_f11_input(transducers, timestamp, &report[index]);
+        // Do not update index as it's not being read
+        rmi_f11_input(transducers, timestamp, &report[index]);
     }
     
     if (mt_interface) {
@@ -176,33 +180,18 @@ void VoodooI2CSynapticsDevice::releaseResources() {
         interrupt_simulator->release();
         interrupt_simulator = NULL;
     }
-    
-    if (work_loop) {
-        work_loop->release();
-        work_loop = NULL;
-    }
-    
-    if (acpi_device) {
-        acpi_device->release();
-        acpi_device = NULL;
-    }
+
+    OSSafeReleaseNULL(work_loop);
+
+    OSSafeReleaseNULL(acpi_device);
     
     if (api) {
         if (api->isOpen(this))
             api->close(this);
-        api->release();
         api = NULL;
     }
     
-    if (transducers) {
-        for (int i = 0; i < transducers->getCount(); i++) {
-            OSObject* object = transducers->getObject(i);
-            if (object) {
-                object->release();
-            }
-        }
-        OSSafeReleaseNULL(transducers);
-    }
+    OSSafeReleaseNULL(transducers);
 }
 
 bool VoodooI2CSynapticsDevice::start(IOService* api) {
@@ -221,14 +210,13 @@ bool VoodooI2CSynapticsDevice::start(IOService* api) {
     work_loop->retain();
     
     acpi_device->retain();
-    api->retain();
     
     if (!api->open(this)) {
         IOLog("%s::%s Could not open API\n", getName(), name);
         goto exit;
     }
     
-    /* Sasha - Attempt implementation of polling */
+    /* Implementation of polling */
     interrupt_source = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CSynapticsDevice::interruptOccured), api, 0);
     if (!interrupt_source) {
         IOLog("%s::%s Could not get interrupt event source\n, trying to fallback on polling.", getName(), name);
@@ -244,13 +232,12 @@ bool VoodooI2CSynapticsDevice::start(IOService* api) {
         work_loop->addEventSource(interrupt_source);
         interrupt_source->enable();
     }
-    /* End Sasha */
     
     PMinit();
     api->joinPMtree(this);
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
     
-    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+    setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
     
     publish_multitouch_interface();
     
@@ -270,11 +257,10 @@ void VoodooI2CSynapticsDevice::stop(IOService* provider) {
 }
 
 bool VoodooI2CSynapticsDevice::init(OSDictionary* properties) {
-    transducers = NULL;
     if (!super::init(properties))
         return false;
-    
-    
+
+    transducers = NULL;
     awake = true;
     
     return true;
@@ -656,18 +642,19 @@ int VoodooI2CSynapticsDevice::rmi_populate_f11()
         return ret;
     }
     max_fingers = (buf[0] & 0x07) + 1;
-    setProperty("Max Fingers", OSNumber::withNumber(max_fingers, sizeof(max_fingers) * 8));
+    setProperty("Max Fingers", max_fingers, sizeof(max_fingers) * 8);
     if (max_fingers > 5)
         max_fingers = 10;
     
     transducers = OSArray::withCapacity(max_fingers);
-    if (!transducers) {
+    if (!transducers)
         return false;
-    }
+
     DigitiserTransducerType type = kDigitiserTransducerFinger;
     for (int i = 0; i < max_fingers; i++) {
         VoodooI2CDigitiserTransducer* transducer = VoodooI2CDigitiserTransducer::transducer(type, NULL);
         transducers->setObject(transducer);
+        OSSafeReleaseNULL(transducer);
     }
     
     f11.report_size = max_fingers * 5 +
@@ -747,9 +734,9 @@ int VoodooI2CSynapticsDevice::rmi_populate_f11()
             
             x_size_mm = x_size / 10;
             y_size_mm = y_size / 10;
-            
-            setProperty("X per mm", OSNumber::withNumber(x_size_mm, sizeof(x_size_mm) * 8));
-            setProperty("Y per mm", OSNumber::withNumber(y_size_mm, sizeof(y_size_mm) * 8));
+
+            setProperty("X per mm", x_size_mm, sizeof(x_size_mm) * 8);
+            setProperty("Y per mm", y_size_mm, sizeof(y_size_mm) * 8);
             
             IOLog("%s::%s::size in mm: %d x %d\n", getName(), name,
                   x_size_mm, y_size_mm);
@@ -805,8 +792,8 @@ int VoodooI2CSynapticsDevice::rmi_populate_f11()
     max_x = f11_ctrl_regs[6] | (f11_ctrl_regs[7] << 8);
     max_y = f11_ctrl_regs[8] | (f11_ctrl_regs[9] << 8);
     
-    setProperty("Max X", OSNumber::withNumber(max_x, 32));
-    setProperty("Max Y", OSNumber::withNumber(max_y, 32));
+    setProperty("Max X", max_x, 32);
+    setProperty("Max Y", max_y, 32);
     
     IOLog("%s::%s::Trackpad Resolution: %d x %d\n", getName(), name, max_x, max_y);
     
@@ -1079,8 +1066,7 @@ void VoodooI2CSynapticsDevice::unpublish_multitouch_interface() {
     }
 }
 
-/* Sasha - impl polling */
 void VoodooI2CSynapticsDevice::simulateInterrupt(OSObject* owner, IOTimerEventSource *timer) {
-    interruptOccured(owner, NULL, NULL);
+    interruptOccured(owner, NULL, 0);
     interrupt_simulator->setTimeoutMS(INTERRUPT_SIMULATOR_TIMEOUT);
 }
