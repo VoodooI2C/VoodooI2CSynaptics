@@ -36,12 +36,6 @@ void VoodooI2CSynapticsDevice::rmi_f11_process_touch(OSArray* transducers, int t
     
     y = max_y - y;
     
-    x *= mt_interface->logical_max_x;
-    x /= mt_interface->physical_max_x;
-    
-    y *= mt_interface->logical_max_y;
-    y /= mt_interface->physical_max_y;
-    
     transducer->id = transducer_id;
     transducer->secondary_id = transducer_id;
     transducer->coordinates.x.update(x, timestamp);
@@ -1045,11 +1039,11 @@ bool VoodooI2CSynapticsDevice::publish_multitouch_interface() {
     // mt_interface->setProperty(kIOHIDProductIDKey, 0x0, 32);
     mt_interface->setProperty("Firmware ID", firmware_id, 32);
     
-    mt_interface->logical_max_x = x_size_mm * 10;
-    mt_interface->logical_max_y = y_size_mm * 10;
+    mt_interface->logical_max_x = max_x;
+    mt_interface->logical_max_y = max_y;
     
-    mt_interface->physical_max_x = max_x;
-    mt_interface->physical_max_y = max_y;
+    mt_interface->physical_max_x = x_size_mm * 10;
+    mt_interface->physical_max_y = y_size_mm * 10;
     
     mt_interface->registerService();
     return true;
