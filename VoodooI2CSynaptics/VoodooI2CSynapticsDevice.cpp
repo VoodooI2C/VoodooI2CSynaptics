@@ -961,7 +961,6 @@ IOReturn VoodooI2CSynapticsDevice::setPowerState(unsigned long powerState, IOSer
         IOLog("%s::Going to Sleep!\n", getName());
     } else {
         if (!awake){
-            rmi_populate();
             
             awake = true;
             IOLog("%s::Woke up from Sleep!\n", getName());
