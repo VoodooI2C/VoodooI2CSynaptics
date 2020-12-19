@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FC036FD258E6D200026BA14 /* libkmod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC036FC258E6D200026BA14 /* libkmod.a */; };
 		ACD148B71FF1800A0008EA7B /* VoodooI2CSynapticsDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD148B51FF1800A0008EA7B /* VoodooI2CSynapticsDevice.cpp */; };
 		ACD148B81FF1800A0008EA7B /* VoodooI2CSynapticsDevice.hpp in Headers */ = {isa = PBXBuildFile; fileRef = ACD148B61FF1800A0008EA7B /* VoodooI2CSynapticsDevice.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0FC036FC258E6D200026BA14 /* libkmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkmod.a; path = ../../MacKernelSDK/Library/x86_64/libkmod.a; sourceTree = "<group>"; };
 		ACD148A21FF17DE00008EA7B /* VoodooI2CSynaptics.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoodooI2CSynaptics.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACD148A91FF17DE00008EA7B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ACD148B51FF1800A0008EA7B /* VoodooI2CSynapticsDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CSynapticsDevice.cpp; sourceTree = "<group>"; };
@@ -24,17 +26,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FC036FD258E6D200026BA14 /* libkmod.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0FC036FB258E6D1F0026BA14 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0FC036FC258E6D200026BA14 /* libkmod.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		ACD148981FF17DE00008EA7B = {
 			isa = PBXGroup;
 			children = (
 				ACD148A41FF17DE00008EA7B /* VoodooI2CSynaptics */,
 				ACD148A31FF17DE00008EA7B /* Products */,
+				0FC036FB258E6D1F0026BA14 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -148,6 +160,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -193,6 +206,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../MacKernelSDK/Headers";
+				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/../../MacKernelSDK/Headers";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -204,6 +219,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -243,6 +259,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../MacKernelSDK/Headers";
+				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/../../MacKernelSDK/Headers";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -256,6 +274,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0d1;
 				INFOPLIST_FILE = VoodooI2CSynaptics/Info.plist;
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/../../MacKernelSDK/Library/x86_64";
 				MODULE_NAME = com.alexandred.VoodooI2CSynaptics;
 				MODULE_VERSION = 1.0.0d1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2CSynaptics;
@@ -271,6 +290,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0d1;
 				INFOPLIST_FILE = VoodooI2CSynaptics/Info.plist;
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/../../MacKernelSDK/Library/x86_64";
 				MODULE_NAME = com.alexandred.VoodooI2CSynaptics;
 				MODULE_VERSION = 1.0.0d1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2CSynaptics;
