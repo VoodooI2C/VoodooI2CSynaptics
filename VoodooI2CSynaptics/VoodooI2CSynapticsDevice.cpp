@@ -1041,8 +1041,8 @@ bool VoodooI2CSynapticsDevice::publish_multitouch_interface() {
     mt_interface->logical_max_x = max_x;
     mt_interface->logical_max_y = max_y;
     
-    mt_interface->physical_max_x = x_size_mm * 10;
-    mt_interface->physical_max_y = y_size_mm * 10;
+    mt_interface->physical_max_x = x_size_mm * 100;
+    mt_interface->physical_max_y = y_size_mm * 100;
     
     mt_interface->registerService();
     return true;
